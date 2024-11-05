@@ -9,6 +9,8 @@ Dipole elektryczne w zmiennym polu elektrycznym - dipole w obecności sił lepko
 ## Cel projektu
 Ukazanie ruchu dipolu w zmiennym polu elektrycznym w zależności od parametrów. Animacja + wykres.
 
+Przy jakiej częstotliwości pola / lepkości przestaną się obracać?
+
 ## Technologia
 Python z wykorzystaniem bibliotek:
 - matplotlib
