@@ -1,7 +1,7 @@
 # fo_project_24Z
 ## Skład zespołu
 - Kornelia Błaszczuk (331361)
-- Kinga Łukiewicz ()
+- Kinga Łukiewicz (331399)
 
 ## Temat
 Dipole elektryczne w zmiennym polu elektrycznym - dipole w obecności sił lepkości.
