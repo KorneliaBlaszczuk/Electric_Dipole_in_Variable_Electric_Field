@@ -4,7 +4,9 @@ from matplotlib.animation import FuncAnimation
 from scipy.integrate import solve_ivp
 
 
-def symulacja_dipola_animacja(E0=1.0, omega=1.0, gamma=0.1, p=0.1, czas_sim=20):
+def symulacja_dipola_animacja(
+    E0=1.0, omega=1.0, gamma=0.1, p=0.1, czas_sim=20
+):
     d = 0.1  # Odległość między ładunkami dipola
     I = 1.0  # Moment bezwładności dipola
 
@@ -31,7 +33,9 @@ def symulacja_dipola_animacja(E0=1.0, omega=1.0, gamma=0.1, p=0.1, czas_sim=20):
     t_eval = np.linspace(t_start, t_end, 1000)
 
     # Rozwiązywanie równań ruchu
-    sol = solve_ivp(rownanie_ruchu, [t_start, t_end], y0, t_eval=t_eval, method="RK45")
+    sol = solve_ivp(
+        rownanie_ruchu, [t_start, t_end], y0, t_eval=t_eval, method="RK45"
+    )
     theta_values = sol.y[0]  # Kąt θ w funkcji czasu
 
     # Wykres
@@ -72,13 +76,17 @@ def symulacja_dipola_animacja(E0=1.0, omega=1.0, gamma=0.1, p=0.1, czas_sim=20):
         negative_charge.set_data([x2], [y2])
         return line, positive_charge, negative_charge
 
-
     ani = FuncAnimation(
-        fig, animate, frames=len(theta_values), init_func=init, interval=20, blit=True
+        fig,
+        animate,
+        frames=len(theta_values),
+        init_func=init,
+        interval=20,
+        blit=True,
     )
 
     plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     symulacja_dipola_animacja()
