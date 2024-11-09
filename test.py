@@ -19,14 +19,14 @@ def symulacja_dipola_animacja(
     d = 0.1  # Odległość między ładunkami dipola
     I = 1.0  # Moment bezwładności dipola
 
-    def pole_elektryczne(t):
+    def pole_elektryczne(t, omega):
         """
         E(t)
         """
         return E0 * np.cos(omega * t)
 
     # w obecności sił lepkości
-    def rownanie_ruchu(t, y, gamma):
+    def rownanie_ruchu(t, y, omega, gamma):
         """
         równanie ruchu dipola z uwzględnieniem sił lepkości
         I - moment bezwładności dipola
@@ -36,7 +36,7 @@ def symulacja_dipola_animacja(
         E(t) - zmienne pole elektryczne
         """
         theta, omega_theta = y  # Kąt i prędkość kątowa
-        E = pole_elektryczne(t)  # Wartość pola elektrycznego w czasie t
+        E = pole_elektryczne(t, omega)  # Wartość pola elektrycznego w czasie t
         moment_sily = p * E * np.sin(theta)
         dtheta_dt = omega_theta
         domega_dt = (moment_sily - gamma * omega_theta) / I
@@ -55,17 +55,15 @@ def symulacja_dipola_animacja(
     # Rozwiązywanie równań ruchu
     def solve_simulation(omega_value, gamma_value):
         """Rozwiązywanie równań ruchu"""
-
-        def pole_elektryczne(t):
-            """Aktualizacja funkcji pola elektrycznego przy nowym omega"""
-            return E0 * np.cos(omega_value * t)
-
         # Rozwiązywanie równań ruchu
         sol = solve_ivp(
             rownanie_ruchu,
             [t_start, t_end],
             y0,
-            args=(gamma_value,),
+            args=(
+                omega_value,
+                gamma_value,
+            ),
             t_eval=t_eval,
             method="RK45",
         )
