@@ -1,5 +1,7 @@
 # fo_project_24Z
 
+@TODO: może dodać linie pola albo nie
+
 ## Skład zespołu
 
 - Kornelia Błaszczuk (331361)
