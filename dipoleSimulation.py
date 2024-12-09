@@ -10,16 +10,11 @@ class DipoleSimulation:
         """
         Inicjalizacja parametrów symulacji dipola.
 
-        :param E0: Amplituda pola elektrycznego, maksymalna wartość,
-            jaką może osiągnąć pole elektryczne w danym czasie
-            (jednostka: V/m, czyli wolt na metr).
-        :param omega: Częstotliwość pola (jednostka: rad/s,
-            czyli radian na sekundę)
-        :param gamma: Współczynnik lepkości (jednostka: kg·m²/s,
-            odpowiadająca tłumieniu ruchu obrotowego).
-        :param p: Moment dipolowy, wyrażony wzorem p=q*d
-            (jednostka: C·m, czyli kulomb razy metr).
-        :param czas_sym: Czas symulacji (jednostka: s, czyli sekunda).
+        :param E0: Amplituda pola elektrycznego (V/m).
+        :param omega: Częstotliwość pola (rad/s).
+        :param gamma: Współczynnik lepkości (kg·m²/s).
+        :param p: Moment dipolowy (C·m).
+        :param sim_time: Czas symulacji (s).
         """
         self.E0 = E0
         self.omega = omega
@@ -28,37 +23,34 @@ class DipoleSimulation:
         self.sim_time = sim_time
 
         # Inne stałe parametry
-        self.d = 0.1  # Odległość między ładunkami dipola (jednostka: m, czyli metr)
-        self.I = 1.0  # Moment bezwładności dipola (jednostka: kg·m²)
+        self.d = 0.1  # Odległość między ładunkami dipola (m)
+        self.I = 1.0  # Moment bezwładności dipola (kg·m²)
 
-        self.theta_values = None  # Przechowuje wartości kąta theta z symulacji
-        self.y0 = [
-            0.5,
-            0.0,
-        ]  # Kąt początkowy (rad) i początkowa prędkość kątowa (rad/s)
+        self.theta_values = None  # Przechowuje wartości kąta theta
+        self.y0 = [0.5, 0.0]  # Kąt początkowy (rad) i prędkość kątowa (rad/s)
 
         # Przygotowanie rysunku i suwaków
         self.fig, self.ax = plt.subplots(1, 2, figsize=(12, 6))
         self.setup_plot()
         self.create_sliders()
 
-    def electric_field(self, t):
+    def electric_field(self, t, x, y):
         """
-        Oblicza wartość pola elektrycznego w chwili t.
-
-        :param t: Czas (jednostka: s, czyli sekunda).
+        Oblicza wartość pola elektrycznego w chwili t w punkcie (x, y).
+        Załóżmy, że pole elektryczne jest jednolite i zmienia się w czasie,
+        ale nie zależy od pozycji w przestrzeni (jednoosiowe).
         """
-        return self.E0 * np.cos(self.omega * t)
+        E_t = self.E0 * np.cos(self.omega * t)  # Pole elektryczne w czasie t
+        return E_t  # Pole elektryczne wzdłuż osi X
 
     def equation_of_motion(self, t, y):
         """
         Równanie ruchu dipola z uwzględnieniem sił lepkości.
-
-        :param t:  Czas (jednostka: s, czyli sekunda).
-        :param y: Tablica kąta (rad) i prędkości kątowej (rad/s).
         """
         theta, omega_theta = y  # Kąt i prędkość kątowa
-        E = self.electric_field(t)  # Wartość pola elektrycznego w czasie t
+        E = self.electric_field(
+            t, 0, 0
+        )  # Wartość pola elektrycznego w czasie t (jednoosiowe)
         torque = self.p * E * np.sin(theta)  # Moment siły
         dtheta_dt = omega_theta
         domega_dt = (torque - self.gamma * omega_theta) / self.I
@@ -89,7 +81,6 @@ class DipoleSimulation:
         self.ax[0].set_xlabel("Czas (s)")
         self.ax[0].set_ylabel("Kąt θ (rad)")
         self.ax[0].set_title("Zmiana kąta θ w czasie")
-        self.ax[0].legend()
         self.ax[0].grid()
 
         # Animacja ruchu dipola
@@ -102,6 +93,22 @@ class DipoleSimulation:
         (self.line,) = self.ax[1].plot([], [], "o-", lw=2, color="black")
         (self.positive_charge,) = self.ax[1].plot([], [], "ro")  # Ładunek dodatni
         (self.negative_charge,) = self.ax[1].plot([], [], "bo")  # Ładunek ujemny
+
+        # Dodanie linii pola elektrycznego
+        self.x_field = np.linspace(-0.2, 0.2, 10)
+        self.y_field = np.linspace(-0.2, 0.2, 10)
+        self.X_field, self.Y_field = np.meshgrid(self.x_field, self.y_field)
+        self.E_field = self.ax[1].quiver(
+            self.X_field,
+            self.Y_field,
+            np.zeros_like(self.X_field),
+            np.zeros_like(self.Y_field),
+            angles="xy",
+            scale_units="xy",
+            scale=5,
+            color="grey",
+            alpha=0.6,
+        )
 
         self.animation = FuncAnimation(
             self.fig,
@@ -119,7 +126,8 @@ class DipoleSimulation:
         self.line.set_data([], [])
         self.positive_charge.set_data([], [])
         self.negative_charge.set_data([], [])
-        return self.line, self.positive_charge, self.negative_charge
+        self.E_field.set_UVC(np.zeros_like(self.X_field), np.zeros_like(self.Y_field))
+        return self.line, self.positive_charge, self.negative_charge, self.E_field
 
     def animate(self, i):
         """
@@ -131,7 +139,15 @@ class DipoleSimulation:
         self.line.set_data([x1, x2], [y1, y2])
         self.positive_charge.set_data([x1], [y1])
         self.negative_charge.set_data([x2], [y2])
-        return self.line, self.positive_charge, self.negative_charge
+
+        # Aktualizacja pola elektrycznego
+        E_x = self.electric_field(i * self.sim_time / 1000, x1, y1)
+        E_y = np.zeros_like(self.X_field)
+
+        # Pole elektryczne rozciągające się wzdłuż osi X
+        self.E_field.set_UVC(E_x * np.ones_like(self.X_field), E_y)
+
+        return self.line, self.positive_charge, self.negative_charge, self.E_field
 
     def create_sliders(self):
         """
@@ -170,9 +186,6 @@ class DipoleSimulation:
     def update_simulation(self, val):
         """
         Aktualizuje symulację przy zmianie wartości omega lub gamma.
-
-         :param val: Nowa wartość ustawiona na suwaku (częstotliwość
-            omega lub współczynnik lepkości gamma).
         """
         self.omega = self.slider_omega.val
         self.gamma = self.slider_gamma.val
@@ -181,15 +194,15 @@ class DipoleSimulation:
 
         # Aktualizacja wykresu zmiany kąta theta
         self.ax[0].cla()
-        self.ax[0].plot(sol.t, self.theta_values, label="Kąt θ (rad)")
+        self.ax[0].plot(
+            np.linspace(0, self.sim_time, len(self.theta_values)), self.theta_values
+        )
         self.ax[0].set_xlabel("Czas (s)")
         self.ax[0].set_ylabel("Kąt θ (rad)")
         self.ax[0].set_title("Zmiana kąta θ w czasie")
         self.ax[0].grid()
 
-        # Zmiana liczby klatek animacji
-        self.animation.event_source.stop()
-        self.animation.frames = len(self.theta_values)
+        # Aktualizacja animacji
         self.animation.event_source.start()
 
     def run(self):
