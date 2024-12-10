@@ -176,8 +176,8 @@ class DipoleSimulation:
         self.slider_omega = Slider(
             ax_slider_om,
             "Częstotliwość pola",
-            0.0,
-            20.0,
+            0.1,
+            10.0,
             valinit=self.omega,
             valstep=0.1,
         )
@@ -189,8 +189,8 @@ class DipoleSimulation:
         self.slider_gamma = Slider(
             ax_slider_ga,
             "Współczynnik lepkości",
-            0.0,
-            20.0,
+            0.1,
+            10.0,
             valinit=self.gamma,
             valstep=0.1,
         )
