@@ -6,7 +6,7 @@ from scipy.integrate import solve_ivp
 
 
 class DipoleSimulation:
-    def __init__(self, E0=1.0, omega=1.0, gamma=0.1, p=0.1, sim_time=20):
+    def __init__(self, E0=1.0, omega=1.0, gamma=0.1, p=0.1, sim_time=100):
         """
         Inicjalizacja parametrów symulacji dipola.
 
@@ -91,8 +91,12 @@ class DipoleSimulation:
 
         # Elementy animacji dipola
         (self.line,) = self.ax[1].plot([], [], "o-", lw=2, color="black")
-        (self.positive_charge,) = self.ax[1].plot([], [], "ro")  # Ładunek dodatni
-        (self.negative_charge,) = self.ax[1].plot([], [], "bo")  # Ładunek ujemny
+        (self.positive_charge,) = self.ax[1].plot(
+            [], [], "ro"
+        )  # Ładunek dodatni
+        (self.negative_charge,) = self.ax[1].plot(
+            [], [], "bo"
+        )  # Ładunek ujemny
 
         # Dodanie linii pola elektrycznego
         self.x_field = np.linspace(-0.2, 0.2, 10)
@@ -126,8 +130,15 @@ class DipoleSimulation:
         self.line.set_data([], [])
         self.positive_charge.set_data([], [])
         self.negative_charge.set_data([], [])
-        self.E_field.set_UVC(np.zeros_like(self.X_field), np.zeros_like(self.Y_field))
-        return self.line, self.positive_charge, self.negative_charge, self.E_field
+        self.E_field.set_UVC(
+            np.zeros_like(self.X_field), np.zeros_like(self.Y_field)
+        )
+        return (
+            self.line,
+            self.positive_charge,
+            self.negative_charge,
+            self.E_field,
+        )
 
     def animate(self, i):
         """
@@ -147,7 +158,12 @@ class DipoleSimulation:
         # Pole elektryczne rozciągające się wzdłuż osi X
         self.E_field.set_UVC(E_x * np.ones_like(self.X_field), E_y)
 
-        return self.line, self.positive_charge, self.negative_charge, self.E_field
+        return (
+            self.line,
+            self.positive_charge,
+            self.negative_charge,
+            self.E_field,
+        )
 
     def create_sliders(self):
         """
@@ -160,8 +176,8 @@ class DipoleSimulation:
         self.slider_omega = Slider(
             ax_slider_om,
             "Częstotliwość pola",
-            0.1,
-            5.0,
+            0.0,
+            20.0,
             valinit=self.omega,
             valstep=0.1,
         )
@@ -173,8 +189,8 @@ class DipoleSimulation:
         self.slider_gamma = Slider(
             ax_slider_ga,
             "Współczynnik lepkości",
-            0.1,
-            5.0,
+            0.0,
+            20.0,
             valinit=self.gamma,
             valstep=0.1,
         )
@@ -195,7 +211,8 @@ class DipoleSimulation:
         # Aktualizacja wykresu zmiany kąta theta
         self.ax[0].cla()
         self.ax[0].plot(
-            np.linspace(0, self.sim_time, len(self.theta_values)), self.theta_values
+            np.linspace(0, self.sim_time, len(self.theta_values)),
+            self.theta_values,
         )
         self.ax[0].set_xlabel("Czas (s)")
         self.ax[0].set_ylabel("Kąt θ (rad)")
