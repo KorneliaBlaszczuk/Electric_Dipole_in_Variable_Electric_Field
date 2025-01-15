@@ -52,8 +52,10 @@ class DipoleSimulation:
             t, 0, 0
         )  # Wartość pola elektrycznego w czasie t (jednoosiowe)
         torque = self.p * E * np.sin(theta)  # Moment siły
-        dtheta_dt = omega_theta
-        domega_dt = (torque - self.gamma * omega_theta) / self.I
+        dtheta_dt = omega_theta  # prędkość kątowa
+        domega_dt = (
+            torque - self.gamma * omega_theta
+        ) / self.I  # przyspieszenie kątowe
         return [dtheta_dt, domega_dt]
 
     def solve_simulation(self):
@@ -82,6 +84,8 @@ class DipoleSimulation:
         self.ax[0].set_ylabel("Kąt θ (rad)")
         self.ax[0].set_title("Zmiana kąta θ w czasie")
         self.ax[0].grid()
+
+        self.ax[0].set_ylim(-0.25, 0.75)
 
         # Animacja ruchu dipola
         self.ax[1].set_xlim(-0.2, 0.2)
@@ -218,6 +222,8 @@ class DipoleSimulation:
         self.ax[0].set_ylabel("Kąt θ (rad)")
         self.ax[0].set_title("Zmiana kąta θ w czasie")
         self.ax[0].grid()
+
+        self.ax[0].set_ylim(-0.25, 0.75)
 
         # Aktualizacja animacji
         self.animation.event_source.start()
