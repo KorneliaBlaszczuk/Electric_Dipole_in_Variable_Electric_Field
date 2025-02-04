@@ -2,8 +2,8 @@
 
 ## Skład zespołu
 
-- Kornelia Błaszczuk (331361)
-- Kinga Łukiewicz (331399)
+- Kornelia Błaszczuk
+- Kinga Łukiewicz
 
 ## Temat
 
@@ -27,7 +27,7 @@ Projekt jest realizowany w języku Python z wykorzystaniem bibliotek:
 
 ## Sposób uruchomienia programu
 
-Aby uruchomić program należy przygotować środowisko w Pythonie oraz pobrać powyżej wypisane biblioteki. 
+Aby uruchomić program należy przygotować środowisko w Pythonie oraz pobrać powyżej wypisane biblioteki.
 Po uruchomieniu programu pojawi się okno z wykresami i animacją. Użytkownik może zmieniać wartość częstotliwości oraz współczynnika lepkości za pomocą interaktywnych suwaków znajdujących się pod wykresami. Symulacja automatycznie zaktualizuje wykresy oraz animację, ilustrując wpływ zmienianych parametrów na ruch dipola.
 
 #### Obserwacja wyników
