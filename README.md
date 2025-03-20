@@ -1,9 +1,38 @@
 # fo_project_24Z
+## ENG
 
+## Team Members
+- Kornelia Błaszczuk
+- Kinga Łukiewicz
+
+## Topic
+Electric Dipoles in a Varying Electric Field - Dipoles in the Presence of Viscous Forces.
+
+## Assumptions and Project Goal
+The goal of the project is to demonstrate the motion of a dipole in a varying electric field depending on parameters such as the frequency of the electric field and the viscosity coefficient. The user will be able to change these parameters using sliders, allowing them to observe how they affect the motion of the dipole. The primary element of the simulation is the visualization of the dipole’s angle change over time, as well as the animation of its motion in a varying electric field. The simulation will also include a graph showing the relationship between the angle and time, allowing for better observation.
+
+### At what frequency of the field / viscosity will the dipole stop rotating?
+The dipole stops rotating when its motion is fully damped by the viscous force. Increasing the frequency of the field or increasing the viscosity makes the resistance (viscous) torque stronger than the torque induced by the electric field, which results in the dipole stopping. In our implementation, for frequencies and viscosities equal to 5, the angle change is smaller than 0.003, meaning the dipole will stop rotating for the human eye.
+
+## Technology
+The project is implemented in Python using the following libraries:
+
+- **matplotlib**: for creating graphs and animations
+- **scipy**: for solving the motion equation
+- **numpy**: for auxiliary calculations
+
+## How to Run the Program
+To run the program, you need to set up the Python environment and install the libraries listed above. After launching the program, a window will appear with graphs and an animation. The user can change the frequency and viscosity values using interactive sliders located below the graphs. The simulation will automatically update the graphs and animation, illustrating the effect of the modified parameters on the dipole's motion.
+
+## Observing Results
+The first graph will show the change of the dipole's angle over time, and the second graph will display an animation of the dipole's motion in the varying electric field. The user can observe how changes in the parameters affect the dipole's movement and its angle of deflection.
+
+
+## PL
 ## Skład zespołu
 
-- Kornelia Błaszczuk (331361)
-- Kinga Łukiewicz (331399)
+- Kornelia Błaszczuk 
+- Kinga Łukiewicz 
 
 ## Temat
 
